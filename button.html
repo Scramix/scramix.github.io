@@ -1,1 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Choose the Right Button</title>
+</head>
+<body>
 
+<button onclick="showButtons()">Click Me (Follow the instructions)</button>
+
+<div id="hiddenButtons" style="display:none; margin-top:10px;">
+  <h1>Don't click the button that has a ☻</h1>
+  <button>Don't Click Me</button>
+  <button>☻☻☻☻☻☻☻☻</button>
+</div>
+
+<script>
+function showButtons() {
+  document.getElementById("hiddenButtons").style.display = "block";
+}
+</script>
+
+  
+  </body>
+</html>
