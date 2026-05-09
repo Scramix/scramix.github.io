@@ -1,5 +1,5 @@
 -------------
-+ README.md +
++ README.md
 -------------
 
 this is my README.md file. I'm Scramix. nice to meet you. i'm a os/2 fan and i really like messing with vms and playing with dosbox in my free time.
