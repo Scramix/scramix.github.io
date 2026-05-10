@@ -2,32 +2,147 @@
 <html>
 <head>
   <title>Choose the Right Button</title>
+
+  <style>
+    body {
+      font-family: Consolas, monospace;
+    }
+
+    .centerWin {
+      display: none;
+      height: 100vh;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      font-size: 64px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 
-<button id="mainButton" onclick="showButtons()">
+<!-- START -->
+<button id="mainButton" onclick="showStage1()">
   Click Me (Follow the instructions)
 </button>
 
-<div id="hiddenButtons" style="display:none; margin-top:10px;">
-  <h1>Don't click the button that has a ☻</h1>
+<!-- STAGE 1 -->
+<div id="stage1" style="display:none;">
+  <h1 id="stage1Title">Loading...</h1>
+  <div id="stage1Buttons"></div>
+</div>
 
-  <button>Don't Click Me</button>
+<!-- STAGE 2 -->
+<div id="stage2" style="display:none;">
+  <h1>Don't click the button that has a ₆ in it.</h1>
+  <div id="stage2Buttons"></div>
+</div>
 
-  <button onclick="bsod()">
-    ☻☻☻☻☻☻☻☻
-  </button>
+<!-- WIN -->
+<div id="winScreen" class="centerWin">
+  YOU WON
 </div>
 
 <script>
-function showButtons() {
-  document.getElementById("mainButton").remove();
-  document.getElementById("hiddenButtons").style.display = "block";
-}
+
+const cursedSymbols = ["§§§§§§", "┘", "@", "☠", "▓▓▓", "X"];
+
+let targetSymbol = "";
+
+/* ---------------- BSOD ---------------- */
 
 function bsod() {
   window.location.href = "bsod.html";
 }
+
+/* ---------------- STAGE 1 ---------------- */
+
+function showStage1() {
+  document.getElementById("mainButton").remove();
+  document.getElementById("stage1").style.display = "block";
+
+  let container = document.getElementById("stage1Buttons");
+  container.innerHTML = "";
+
+  // pick ONE cursed symbol as danger
+  targetSymbol = cursedSymbols[Math.floor(Math.random() * cursedSymbols.length)];
+
+  document.getElementById("stage1Title").innerText =
+    "Don't click the " + targetSymbol;
+
+  let correctIndex = Math.floor(Math.random() * 3);
+
+  for (let i = 0; i < 3; i++) {
+    let btn = document.createElement("button");
+
+    if (i === correctIndex) {
+      btn.innerText = "Don't Click Me";
+      btn.onclick = nextStage;
+    } else {
+      let symbol = cursedSymbols[Math.floor(Math.random() * cursedSymbols.length)];
+      btn.innerText = symbol;
+
+      btn.onclick = function () {
+        if (symbol === targetSymbol) {
+          bsod();
+        }
+      };
+    }
+
+    container.appendChild(btn);
+    container.appendChild(document.createTextNode(" "));
+  }
+}
+
+/* ---------------- STAGE 2 ---------------- */
+
+function nextStage() {
+  document.getElementById("stage1").remove();
+  document.getElementById("stage2").style.display = "block";
+
+  let container = document.getElementById("stage2Buttons");
+  container.innerHTML = "";
+
+  let correctIndex = Math.floor(Math.random() * 3);
+
+  for (let i = 0; i < 3; i++) {
+    let btn = document.createElement("button");
+
+    if (i === correctIndex) {
+      btn.innerText = "I'm the real one.";
+      btn.onclick = win;
+    } else {
+      btn.innerText = Math.random() > 0.5
+        ? "No ₆I'm the real one."
+        : "₆NO I'M THE REAL ONE!";
+
+      btn.onclick = bsod;
+    }
+
+    container.appendChild(btn);
+    container.appendChild(document.createTextNode(" "));
+  }
+}
+
+/* ---------------- WIN ---------------- */
+
+function win() {
+  document.body.innerHTML = "";
+
+  let winDiv = document.createElement("div");
+  winDiv.innerText = "YOU WON";
+
+  winDiv.style.height = "100vh";
+  winDiv.style.display = "flex";
+  winDiv.style.justifyContent = "center";
+  winDiv.style.alignItems = "center";
+  winDiv.style.fontSize = "64px";
+  winDiv.style.fontFamily = "Arial";
+
+  document.body.appendChild(winDiv);
+}
+
 </script>
 
 </body>
