@@ -5,20 +5,30 @@
 </head>
 <body>
 
-<button onclick="showButtons()">Click Me (Follow the instructions)</button>
+<button id="mainButton" onclick="showButtons()">
+  Click Me (Follow the instructions)
+</button>
 
 <div id="hiddenButtons" style="display:none; margin-top:10px;">
   <h1>Don't click the button that has a ☻</h1>
+
   <button>Don't Click Me</button>
-  <button>☻☻☻☻☻☻☻☻</button>
+
+  <button onclick="bsod()">
+    ☻☻☻☻☻☻☻☻
+  </button>
 </div>
 
 <script>
 function showButtons() {
+  document.getElementById("mainButton").remove();
   document.getElementById("hiddenButtons").style.display = "block";
+}
+
+function bsod() {
+  window.location.href = "bsod.html";
 }
 </script>
 
-  
-  </body>
+</body>
 </html>
