@@ -1,6 +1,6 @@
--------------
+------------------
 + README.md +
--------------
+------------------
 
 This is my README.md file. I'm Scramix. Nice to meet you. I'm a OS/2 fan and I really like messing with VMs and playing with DOSBox in my free time.
 My favorite computer company is Lenovo. specifically their Thinkpad/Thinkcentre product line.
