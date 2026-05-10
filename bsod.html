@@ -32,18 +32,20 @@ Please wait while we are gathering information about the crash...
 let percent = 0;
 
 let loader = setInterval(() => {
-  if (percent < 100) {
-    percent++;
-    document.getElementById("progress").innerText =
-      "Progress: " + percent + "%";
-  } else {
+  percent++;
+
+  document.getElementById("progress").innerText =
+    "Progress: " + percent + "%";
+
+  if (percent >= 100) {
     clearInterval(loader);
 
     setTimeout(() => {
       window.location.href = "button.html";
     }, 5000);
   }
-}, 100);
+
+}, 350);
 </script>
 
 </body>
