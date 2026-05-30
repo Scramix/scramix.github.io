@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Float AI Settings</title>
+
+<style>
+body {
+    font-family: Tahoma, sans-serif;
+    background: linear-gradient(to bottom, #c9f1ff, #e9fbff);
+    color: #003344;
+    padding: 40px;
+}
+
+.panel {
+    background: rgba(255,255,255,0.8);
+    border: 2px solid #7fdfff;
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+select, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 2px solid #6dd6ff;
+    font-size: 16px;
+}
+
+button {
+    background: white;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+    <h1>Float AI Settings</h1>
+
+    <label>Emoji Level</label>
+    <select id="emojiLevel">
+        <option value="none">None</option>
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+    </select>
+
+    <button onclick="saveSettings()">Save</button>
+
+    <p id="status"></p>
+</div>
+
+<script src="personality.js"></script>
+
+<script>
+const select = document.getElementById("emojiLevel");
+
+// load current setting
+select.value = FloatAIPersonality.getEmojiLevel();
+
+function saveSettings() {
+    FloatAIPersonality.setEmojiLevel(select.value);
+
+    document.getElementById("status").innerText =
+        "Settings saved!";
+}
+</script>
+
+</body>
+</html>
