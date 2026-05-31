@@ -17,4 +17,4 @@ BubbleOS is an operating system project focused on the "bubbly" aesthetic that a
 
 Copyright © BubbleOS Inc. 2026-2028. All rights reserved.
 
-Home Page: [BubbleOS Home Page](bubbleos/home.html)
+Home Page: [BubbleOS Home Page](home.html)
