@@ -1,123 +1,78 @@
-const FloatUI = {
+import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js";
 
-    init() {
+let generator = null;
 
-        this.chatBox =
-            document.getElementById("chatBox");
+const FloatAIEngine = {
 
-        this.input =
-            document.getElementById("chatInput");
+    async init() {
 
-        this.sendBtn =
-            document.getElementById("sendBtn");
+        if (generator) return;
 
-        this.list =
-            document.getElementById("chatList");
+        const model =
+            FloatAIPersonality.getEngine();
 
-        // ENTER TO SEND
-        this.input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                this.send();
-            }
-        });
+        // safer model selection
+        const modelName =
+            model === "float-distilgpt2"
+                ? "Xenova/distilgpt2"
+                : "Xenova/gpt2";
 
-        document.getElementById("newChatBtn")
-            .onclick = () => this.newChat();
-
-        document.getElementById("chatSearch")
-            .oninput = (e) =>
-                this.renderSidebar(
-                    FloatAIChats.search(e.target.value)
-                );
-
-        this.sendBtn.onclick = () => this.send();
-
-        this.newChat();
+        generator = await pipeline(
+            "text-generation",
+            modelName
+        );
     },
 
-    newChat() {
+    async send(messages) {
 
-        const chat =
-            FloatAIChats.createChat();
+        await this.init();
 
-        this.renderSidebar(FloatAIChats.chats);
-        this.renderChat(chat.id);
-    },
+        const lastUser =
+            [...messages]
+                .filter(m => m.role === "user")
+                .slice(-1)[0]?.content || "";
 
-    renderSidebar(chats) {
+        const history =
+            messages
+                .slice(-6)
+                .map(m => `${m.role}: ${m.content}`)
+                .join("\n");
 
-        this.list.innerHTML = "";
+        const prompt =
+`You are Float AI, a helpful assistant inside a retro OS.
 
-        chats.forEach(chat => {
+Conversation:
+${history}
 
-            const btn =
-                document.createElement("button");
+user: ${lastUser}
+assistant:`;
 
-            btn.textContent = chat.title;
+        const result =
+            await generator(prompt, {
+                max_new_tokens: 100,
+                temperature: 0.8,
+                top_p: 0.95,
+                repetition_penalty: 1.1
+            });
 
-            btn.onclick = () =>
-                this.renderChat(chat.id);
+        let text =
+            result?.[0]?.generated_text || "";
 
-            this.list.appendChild(btn);
-        });
-    },
+        // safer extraction
+        const split =
+            text.split("assistant:");
 
-    renderChat(id) {
-
-        FloatAIChats.activeChatId = id;
-
-        const chat =
-            FloatAIChats.getActiveChat();
-
-        if (!chat) return;
-
-        this.chatBox.innerHTML = "";
-
-        for (const m of chat.messages) {
-
-            const div =
-                document.createElement("div");
-
-            div.className = m.role;
-
-            div.textContent = m.content;
-
-            this.chatBox.appendChild(div);
+        if (split.length > 1) {
+            text = split[split.length - 1];
         }
 
-        // auto scroll to bottom
-        this.chatBox.scrollTop =
-            this.chatBox.scrollHeight;
-    },
+        text = text.trim();
 
-    async send() {
+        // fallback so it NEVER returns empty
+        if (!text) {
+            return "…Float AI failed to generate a response.";
+        }
 
-        const text =
-            this.input.value.trim();
-
-        if (!text) return;
-
-        this.input.value = "";
-
-        FloatAIChats.addMessage("user", text);
-
-        this.renderChat(FloatAIChats.activeChatId);
-
-        const chat =
-            FloatAIChats.getActiveChat();
-
-        if (!chat) return;
-
-        const reply =
-            await FloatAIEngine.send(chat.messages);
-
-        FloatAIChats.addMessage("assistant", reply);
-
-        this.renderChat(chat.id);
+        return text;
     }
 };
-
-window.addEventListener("load", () =>
-    FloatUI.init()
-);
