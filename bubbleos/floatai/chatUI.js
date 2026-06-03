@@ -14,6 +14,14 @@ const FloatUI = {
         this.list =
             document.getElementById("chatList");
 
+        // ENTER TO SEND
+        this.input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                this.send();
+            }
+        });
+
         document.getElementById("newChatBtn")
             .onclick = () => this.newChat();
 
@@ -34,7 +42,6 @@ const FloatUI = {
             FloatAIChats.createChat();
 
         this.renderSidebar(FloatAIChats.chats);
-
         this.renderChat(chat.id);
     },
 
@@ -63,18 +70,25 @@ const FloatUI = {
         const chat =
             FloatAIChats.getActiveChat();
 
+        if (!chat) return;
+
         this.chatBox.innerHTML = "";
 
-        chat.messages.forEach(m => {
+        for (const m of chat.messages) {
 
             const div =
                 document.createElement("div");
 
             div.className = m.role;
+
             div.textContent = m.content;
 
             this.chatBox.appendChild(div);
-        });
+        }
+
+        // auto scroll to bottom
+        this.chatBox.scrollTop =
+            this.chatBox.scrollHeight;
     },
 
     async send() {
@@ -92,6 +106,8 @@ const FloatUI = {
 
         const chat =
             FloatAIChats.getActiveChat();
+
+        if (!chat) return;
 
         const reply =
             await FloatAIEngine.send(chat.messages);
