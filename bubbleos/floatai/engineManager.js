@@ -4,9 +4,15 @@ const FloatAIEngine = {
     async init() {
         if (this.generator) return;
 
-        const { pipeline } = await import(
+        const { pipeline, env } = await import(
             "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js"
         );
+
+        // prevents /models/Xenova 404 issues
+        env.allowLocalModels = false;
+        env.useBrowserCache = true;
+        env.backends.onnx.wasm.wasmPaths =
+            "https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/";
 
         this.generator = await pipeline(
             "text2text-generation",
@@ -29,6 +35,7 @@ const FloatAIEngine = {
                     .map(m => `${m.role}: ${m.content}`)
                     .join("\n");
 
+            // FIXED STRING (this was your main crash point)
             const prompt =
 `Hello.
 
@@ -36,17 +43,18 @@ Conversation:
 ${history}
 
 User question:
-${lastUser}
+${lastUser}`;
 
-Respond clearly and concisely.`;
+            const result =
+                await this.generator(prompt, {
+                    max_new_tokens: 120
+                });
 
-            const result = await this.generator(prompt, {
-                max_new_tokens: 120
-            });
-
-            const text = result?.[0]?.generated_text?.trim();
+            const text =
+                result?.[0]?.generated_text?.trim();
 
             return text || "Error. Please resend your message.";
+
         } catch (err) {
             console.error("FloatAIEngine error:", err);
             return "Error. Please resend your message.";
