@@ -1,4 +1,4 @@
-import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
+import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js";
 
 let generator = null;
 
@@ -11,11 +11,15 @@ const FloatAIEngine = {
         const model =
             FloatAIPersonality.getEngine();
 
-        generator = await pipeline(
-            "text-generation",
+        // safer model selection
+        const modelName =
             model === "float-distilgpt2"
                 ? "Xenova/distilgpt2"
-                : "Xenova/gpt2"
+                : "Xenova/gpt2";
+
+        generator = await pipeline(
+            "text-generation",
+            modelName
         );
     },
 
@@ -24,28 +28,51 @@ const FloatAIEngine = {
         await this.init();
 
         const lastUser =
-            messages
+            [...messages]
                 .filter(m => m.role === "user")
                 .slice(-1)[0]?.content || "";
 
+        const history =
+            messages
+                .slice(-6)
+                .map(m => `${m.role}: ${m.content}`)
+                .join("\n");
+
         const prompt =
-`System: Float AI running in BubbleOS environment.
-User: ${lastUser}
-Assistant:`;
+`You are Float AI, a helpful assistant inside a retro OS.
+
+Conversation:
+${history}
+
+user: ${lastUser}
+assistant:`;
 
         const result =
             await generator(prompt, {
-                max_new_tokens: 80,
-                temperature: 0.7,
-                top_p: 0.9
+                max_new_tokens: 100,
+                temperature: 0.8,
+                top_p: 0.95,
+                repetition_penalty: 1.1
             });
 
-        const text =
-            result[0].generated_text;
+        let text =
+            result?.[0]?.generated_text || "";
 
-        return (
-            text.split("Assistant:")[1]?.trim()
-            || text
-        );
+        // safer extraction
+        const split =
+            text.split("assistant:");
+
+        if (split.length > 1) {
+            text = split[split.length - 1];
+        }
+
+        text = text.trim();
+
+        // fallback so it NEVER returns empty
+        if (!text) {
+            return "…Float AI failed to generate a response.";
+        }
+
+        return text;
     }
 };
