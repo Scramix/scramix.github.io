@@ -1,25 +1,17 @@
 const FloatAIChats = {
-
     chats: [],
     activeChatId: null,
 
     load() {
-        const saved =
-            localStorage.getItem("floatai_chats");
-
-        this.chats =
-            saved ? JSON.parse(saved) : [];
+        const saved = localStorage.getItem("floatai_chats");
+        this.chats = saved ? JSON.parse(saved) : [];
     },
 
     save() {
-        localStorage.setItem(
-            "floatai_chats",
-            JSON.stringify(this.chats)
-        );
+        localStorage.setItem("floatai_chats", JSON.stringify(this.chats));
     },
 
     createChat() {
-
         const chat = {
             id: Date.now(),
             title: "New Chat",
@@ -28,19 +20,16 @@ const FloatAIChats = {
 
         this.chats.unshift(chat);
         this.activeChatId = chat.id;
-
         this.save();
+
         return chat;
     },
 
     getActiveChat() {
-        return this.chats.find(
-            c => c.id === this.activeChatId
-        );
+        return this.chats.find(c => c.id === this.activeChatId);
     },
 
     addMessage(role, content) {
-
         const chat = this.getActiveChat();
         if (!chat) return;
 
@@ -54,10 +43,11 @@ const FloatAIChats = {
     },
 
     search(query) {
+        const q = query.toLowerCase();
 
         return this.chats.filter(c =>
-            c.title.toLowerCase()
-                .includes(query.toLowerCase())
+            c.title.toLowerCase().includes(q) ||
+            c.messages.some(m => m.content.toLowerCase().includes(q))
         );
     }
 };
