@@ -9,9 +9,20 @@ const FloatAIPersonality = {
         const saved =
             localStorage.getItem("floatai_personality");
 
-        if (saved) {
-            this.settings =
-                JSON.parse(saved);
+        if (!saved) return;
+
+        try {
+            const parsed = JSON.parse(saved);
+
+            // merge instead of overwrite (IMPORTANT FIX)
+            this.settings = {
+                ...this.settings,
+                ...parsed
+            };
+
+        } catch (e) {
+            console.warn("Corrupt personality data, resetting...");
+            this.save();
         }
     },
 
@@ -28,7 +39,7 @@ const FloatAIPersonality = {
     },
 
     getEmojiLevel() {
-        return this.settings.emojiLevel;
+        return this.settings.emojiLevel ?? "medium";
     },
 
     setEngine(engine) {
@@ -37,7 +48,7 @@ const FloatAIPersonality = {
     },
 
     getEngine() {
-        return this.settings.engine;
+        return this.settings.engine ?? "float-distilgpt2";
     }
 };
 
