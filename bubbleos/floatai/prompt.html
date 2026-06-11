@@ -18,7 +18,6 @@ body {
     color: #003366;
 }
 
-/* Bubble background */
 #bubbles {
     position: fixed;
     inset: 0;
@@ -40,7 +39,6 @@ body {
     to { transform: translateY(-120vh); }
 }
 
-/* fade in */
 #wrapper {
     opacity: 0;
     animation: fadein 1.2s forwards;
@@ -50,7 +48,6 @@ body {
     to { opacity: 1; }
 }
 
-/* header */
 .header {
     text-align: center;
     padding: 25px;
@@ -67,7 +64,6 @@ body {
     opacity: 0.8;
 }
 
-/* layout */
 .container {
     display: flex;
     max-width: 1100px;
@@ -76,7 +72,6 @@ body {
     padding: 10px;
 }
 
-/* panels */
 .panel {
     background: rgba(255,255,255,0.75);
     border: 2px solid #7fdfff;
@@ -85,7 +80,6 @@ body {
     backdrop-filter: blur(4px);
 }
 
-/* sidebar */
 #sidebar {
     width: 260px;
     padding: 10px;
@@ -103,7 +97,20 @@ body {
     cursor: pointer;
 }
 
-/* main chat */
+.chatRow {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.chatRow button.chatBtn {
+    flex: 1;
+}
+
+.chatRow button.menuBtn {
+    width: 40px;
+}
+
 #main {
     flex: 1;
     display: flex;
@@ -112,7 +119,6 @@ body {
     height: 70vh;
 }
 
-/* chat box */
 #chatBox {
     flex: 1;
     overflow-y: auto;
@@ -122,7 +128,6 @@ body {
     border: 1px solid #bfefff;
 }
 
-/* messages */
 .user {
     text-align: right;
     margin: 6px;
@@ -135,7 +140,6 @@ body {
     color: #137333;
 }
 
-/* input */
 #inputArea {
     display: flex;
     margin-top: 10px;
@@ -164,7 +168,6 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* status bar */
 .statusbar {
     position: fixed;
     bottom: 0;
@@ -174,11 +177,6 @@ button:hover {
     border-top: 2px solid #6dd6ff;
     padding: 6px 12px;
     font-size: 12px;
-}
-
-/* footer spacing */
-.footer {
-    height: 60px;
 }
 </style>
 </head>
@@ -190,17 +188,19 @@ button:hover {
 <div id="wrapper">
 
     <div class="header">
-        <div class="logo">🫧 Float AI</div>
-        <div class="tagline">
-            A bubbly browser-native AI system.
-        </div>
+        <div class="logo">Float AI</div>
+        <div class="tagline">A bubbly browser-native AI system.</div>
     </div>
 
     <div class="container">
 
         <!-- Sidebar -->
         <div id="sidebar" class="panel">
-            <button id="newChatBtn">+ New Chat</button>
+
+            <div style="display:flex; gap:5px;">
+                <button id="newChatBtn" style="flex:1;">+ New Chat</button>
+                <button id="settingsBtn"></button>
+            </div>
 
             <input id="chatSearch"
                    placeholder="Search chats..."
@@ -209,15 +209,13 @@ button:hover {
             <div id="chatList"></div>
         </div>
 
-        <!-- Chat area -->
+        <!-- Chat -->
         <div id="main" class="panel">
 
             <div id="chatBox"></div>
 
             <div id="inputArea">
-                <input id="chatInput"
-                       placeholder="Type a message...">
-
+                <input id="chatInput" placeholder="Type a message...">
                 <button id="sendBtn">Send</button>
             </div>
 
@@ -225,15 +223,56 @@ button:hover {
 
     </div>
 
-    <div class="footer"></div>
+</div>
 
+<!-- Settings Modal -->
+<div id="settingsModal"
+     style="
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.3);
+        z-index:9999;
+     ">
+
+    <div class="panel"
+         style="
+            width:300px;
+            margin:120px auto;
+            padding:15px;
+         ">
+
+        <h3>Settings</h3>
+
+        <label>Emoji Level</label>
+        <select id="emojiLevelSelect"
+                style="width:100%; margin-top:5px;">
+            <option value="none">None</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <br><br>
+
+        <button id="saveSettingsBtn">Save</button>
+        <button id="closeSettingsBtn">Close</button>
+
+    </div>
 </div>
 
 <div class="statusbar">
     Float AI • Browser-native engine active
 </div>
 
+<!-- Scripts (separate as requested) -->
+<script src="chatManager.js"></script>
+<script src="engineManager.js"></script>
+<script src="chatUI.js"></script>
+<script src="personality.js"></script>
+
 <script>
+/* bubbles */
 for (let i = 0; i < 40; i++) {
     const bubble = document.createElement("div");
     bubble.className = "bubble";
@@ -243,19 +282,12 @@ for (let i = 0; i < 40; i++) {
     bubble.style.width = size + "px";
     bubble.style.height = size + "px";
     bubble.style.left = Math.random() * 100 + "%";
-    bubble.style.animationDuration =
-        (Math.random() * 10 + 8) + "s";
-    bubble.style.animationDelay =
-        Math.random() * 5 + "s";
+    bubble.style.animationDuration = (Math.random() * 10 + 8) + "s";
+    bubble.style.animationDelay = Math.random() * 5 + "s";
 
     document.getElementById("bubbles").appendChild(bubble);
 }
 </script>
-
-<script src="personality.js"></script>
-<script src="chatManager.js"></script>
-<script src="engineManager.js"></script>
-<script src="chatUI.js"></script>
 
 </body>
 </html>
