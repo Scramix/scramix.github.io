@@ -6,9 +6,7 @@
 <title>Float AI</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -21,7 +19,6 @@ body {
 #bubbles {
     position: fixed;
     inset: 0;
-    overflow: hidden;
     z-index: -1;
 }
 
@@ -56,12 +53,6 @@ body {
 .logo {
     font-size: 50px;
     font-weight: bold;
-    text-shadow: 3px 3px white;
-}
-
-.tagline {
-    font-size: 14px;
-    opacity: 0.8;
 }
 
 .container {
@@ -76,7 +67,6 @@ body {
     background: rgba(255,255,255,0.75);
     border: 2px solid #7fdfff;
     border-radius: 18px;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.08);
     backdrop-filter: blur(4px);
 }
 
@@ -87,27 +77,18 @@ body {
     overflow-y: auto;
 }
 
-#chatList button {
-    width: 100%;
-    margin-top: 5px;
-    border: 2px solid #6dd6ff;
-    background: linear-gradient(#fff, #dff8ff);
-    border-radius: 12px;
-    padding: 8px;
-    cursor: pointer;
-}
-
 .chatRow {
     display: flex;
     gap: 5px;
     margin-top: 5px;
 }
 
-.chatRow button.chatBtn {
+.chatBtn {
     flex: 1;
+    padding: 8px;
 }
 
-.chatRow button.menuBtn {
+.menuBtn {
     width: 40px;
 }
 
@@ -125,33 +106,20 @@ body {
     padding: 10px;
     background: rgba(255,255,255,0.5);
     border-radius: 12px;
-    border: 1px solid #bfefff;
 }
 
-.user {
-    text-align: right;
-    margin: 6px;
-    color: #1a73e8;
-}
-
-.assistant {
-    text-align: left;
-    margin: 6px;
-    color: #137333;
-}
+.user { text-align: right; }
+.assistant { text-align: left; }
 
 #inputArea {
     display: flex;
-    margin-top: 10px;
     gap: 5px;
+    margin-top: 10px;
 }
 
 #chatInput {
     flex: 1;
     padding: 10px;
-    border-radius: 12px;
-    border: 2px solid #6dd6ff;
-    outline: none;
 }
 
 button {
@@ -159,24 +127,15 @@ button {
     border: 2px solid #6dd6ff;
     background: linear-gradient(#fff, #dff8ff);
     cursor: pointer;
-    padding: 10px;
-    font-weight: bold;
-    transition: transform 0.1s;
-}
-
-button:hover {
-    transform: scale(1.05);
 }
 
 .statusbar {
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
-    background: linear-gradient(to right, #dff8ff, #b8ecff);
+    padding: 6px;
+    background: #dff8ff;
     border-top: 2px solid #6dd6ff;
-    padding: 6px 12px;
-    font-size: 12px;
 }
 </style>
 </head>
@@ -189,33 +148,28 @@ button:hover {
 
     <div class="header">
         <div class="logo">Float AI</div>
-        <div class="tagline">A bubbly browser-native AI system.</div>
     </div>
 
     <div class="container">
 
-        <!-- Sidebar -->
         <div id="sidebar" class="panel">
 
             <div style="display:flex; gap:5px;">
-                <button id="newChatBtn" style="flex:1;">+ New Chat</button>
+                <button id="newChatBtn">+ New Chat</button>
                 <button id="settingsBtn"></button>
             </div>
 
-            <input id="chatSearch"
-                   placeholder="Search chats..."
-                   style="width:100%; margin-top:10px;">
+            <input id="chatSearch" placeholder="Search chats..." style="width:100%;margin-top:10px;">
 
             <div id="chatList"></div>
         </div>
 
-        <!-- Chat -->
         <div id="main" class="panel">
 
             <div id="chatBox"></div>
 
             <div id="inputArea">
-                <input id="chatInput" placeholder="Type a message...">
+                <input id="chatInput" placeholder="Type...">
                 <button id="sendBtn">Send</button>
             </div>
 
@@ -225,28 +179,13 @@ button:hover {
 
 </div>
 
-<!-- Settings Modal -->
-<div id="settingsModal"
-     style="
-        display:none;
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,0.3);
-        z-index:9999;
-     ">
-
-    <div class="panel"
-         style="
-            width:300px;
-            margin:120px auto;
-            padding:15px;
-         ">
-
+<!-- Settings -->
+<div id="settingsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);">
+    <div class="panel" style="width:300px;margin:120px auto;padding:15px;">
         <h3>Settings</h3>
 
         <label>Emoji Level</label>
-        <select id="emojiLevelSelect"
-                style="width:100%; margin-top:5px;">
+        <select id="emojiLevelSelect" style="width:100%">
             <option value="none">None</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -256,38 +195,20 @@ button:hover {
         <br><br>
 
         <button id="saveSettingsBtn">Save</button>
-        <button id="closeSettingsBtn">Close</button>
-
+        <button onclick="document.getElementById('settingsModal').style.display='none'">
+            Close
+        </button>
     </div>
 </div>
 
 <div class="statusbar">
-    Float AI • Browser-native engine active
+    Float AI running
 </div>
 
-<!-- Scripts (separate as requested) -->
 <script src="chatManager.js"></script>
 <script src="engineManager.js"></script>
 <script src="chatUI.js"></script>
 <script src="personality.js"></script>
-
-<script>
-/* bubbles */
-for (let i = 0; i < 40; i++) {
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-
-    const size = Math.random() * 60 + 15;
-
-    bubble.style.width = size + "px";
-    bubble.style.height = size + "px";
-    bubble.style.left = Math.random() * 100 + "%";
-    bubble.style.animationDuration = (Math.random() * 10 + 8) + "s";
-    bubble.style.animationDelay = Math.random() * 5 + "s";
-
-    document.getElementById("bubbles").appendChild(bubble);
-}
-</script>
 
 </body>
 </html>
