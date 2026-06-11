@@ -14,6 +14,14 @@ const FloatUI = {
 
         document.getElementById("newChatBtn").onclick = () => this.newChat();
 
+        const settingsBtn = document.getElementById("settingsBtn");
+        if (settingsBtn) {
+            settingsBtn.onclick = () => {
+                const modal = document.getElementById("settingsModal");
+                if (modal) modal.style.display = "block";
+            };
+        }
+
         document.getElementById("chatSearch").oninput = (e) =>
             this.renderSidebar(FloatAIChats.search(e.target.value));
 
@@ -32,10 +40,40 @@ const FloatUI = {
         this.list.innerHTML = "";
 
         chats.forEach(chat => {
+            const row = document.createElement("div");
+            row.className = "chatRow";
+
             const btn = document.createElement("button");
+            btn.className = "chatBtn";
             btn.textContent = chat.title;
+
             btn.onclick = () => this.renderChat(chat.id);
-            this.list.appendChild(btn);
+
+            const menu = document.createElement("button");
+            menu.className = "menuBtn";
+            menu.textContent = "⋮";
+
+            menu.onclick = (e) => {
+                e.stopPropagation();
+
+                const ok = confirm(
+                    `Delete chat "${chat.title}"?`
+                );
+
+                if (!ok) return;
+
+                FloatAIChats.deleteChat(chat.id);
+
+                this.renderSidebar(FloatAIChats.chats);
+
+                if (FloatAIChats.activeChatId === chat.id) {
+                    this.newChat();
+                }
+            };
+
+            row.appendChild(btn);
+            row.appendChild(menu);
+            this.list.appendChild(row);
         });
     },
 
