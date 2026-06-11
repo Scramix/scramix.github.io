@@ -13,7 +13,7 @@ const FloatAIEngine = {
 
         this.generator = await pipeline(
             "text-generation",
-            "Xenova/phi-1_5-mini"
+            "Xenova/phi-2"
         );
     },
 
@@ -21,14 +21,12 @@ const FloatAIEngine = {
         try {
             await this.init();
 
-            const history =
-                messages
-                    .slice(-8)
-                    .map(m => `${m.role}: ${m.content}`)
-                    .join("\n");
+            const history = messages
+                .slice(-8)
+                .map(m => `${m.role}: ${m.content}`)
+                .join("\n");
 
-            const prompt =
-`Hello, Float.
+            const prompt = `Hi.
 
 ${history}
 
@@ -37,24 +35,19 @@ assistant:`;
             const result = await this.generator(prompt, {
                 max_new_tokens: 100,
                 temperature: 0.7,
-                do_sample: true
+                do_sample: true,
             });
 
-            let text =
-                result?.[0]?.generated_text || "";
+            const generated = result[0].generated_text;
 
-            const idx = text.lastIndexOf("assistant:");
+            const reply = generated
+                .slice(prompt.length)
+                .trim();
 
-            if (idx !== -1) {
-                text = text.slice(idx + 10);
-            }
-
-            text = text.trim();
-
-            return text || "I couldn't generate a response.";
+            return reply || "I couldn't generate a response.";
         } catch (err) {
-            console.error(err);
-            return "Engine error.";
+            console.error("Float AI Error:", err);
+            return `Engine error: ${err?.message || err}`;
         }
     }
 };
