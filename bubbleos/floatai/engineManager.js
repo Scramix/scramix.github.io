@@ -10,7 +10,7 @@ const FloatAIEngine = {
             );
 
             env.allowLocalModels = false;
-            env.useBrowserCache = true;
+            env.useBrowserCache = false;
 
             this.generator = await pipeline(
                 "text-generation",
@@ -29,7 +29,7 @@ const FloatAIEngine = {
             .map(m => `${m.role}: ${m.content}`)
             .join("\n");
 
-        return `You are Float, a helpful assistant.
+        return `Hi.
 
 ${history}
 
@@ -47,7 +47,7 @@ assistant:`;
             const prompt = this.buildPrompt(messages);
 
             const result = await this.generator(prompt, {
-                max_new_tokens: 120,
+                max_new_tokens: 16,
                 temperature: 0.7,
                 do_sample: true,
             });
