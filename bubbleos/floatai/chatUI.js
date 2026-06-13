@@ -12,18 +12,13 @@ const FloatUI = {
             }
         });
 
-        document.getElementById("newChatBtn").onclick = () => this.newChat();
-
-        const settingsBtn = document.getElementById("settingsBtn");
-        if (settingsBtn) {
-            settingsBtn.onclick = () => {
-                const modal = document.getElementById("settingsModal");
-                if (modal) modal.style.display = "block";
-            };
-        }
+        document.getElementById("newChatBtn").onclick =
+            () => this.newChat();
 
         document.getElementById("chatSearch").oninput = (e) =>
-            this.renderSidebar(FloatAIChats.search(e.target.value));
+            this.renderSidebar(
+                FloatAIChats.search(e.target.value)
+            );
 
         this.sendBtn.onclick = () => this.send();
 
@@ -40,27 +35,23 @@ const FloatUI = {
         this.list.innerHTML = "";
 
         chats.forEach(chat => {
+
             const row = document.createElement("div");
             row.className = "chatRow";
 
             const btn = document.createElement("button");
             btn.className = "chatBtn";
             btn.textContent = chat.title;
-
             btn.onclick = () => this.renderChat(chat.id);
 
             const menu = document.createElement("button");
             menu.className = "menuBtn";
             menu.textContent = "⋮";
 
-            menu.onclick = (e) => {
-                e.stopPropagation();
-
-                const ok = confirm(
-                    `Delete chat "${chat.title}"?`
-                );
-
-                if (!ok) return;
+            menu.onclick = () => {
+                if (!confirm(`Delete "${chat.title}"?`)) {
+                    return;
+                }
 
                 FloatAIChats.deleteChat(chat.id);
 
@@ -73,6 +64,7 @@ const FloatUI = {
 
             row.appendChild(btn);
             row.appendChild(menu);
+
             this.list.appendChild(row);
         });
     },
@@ -92,7 +84,8 @@ const FloatUI = {
             this.chatBox.appendChild(div);
         }
 
-        this.chatBox.scrollTop = this.chatBox.scrollHeight;
+        this.chatBox.scrollTop =
+            this.chatBox.scrollHeight;
     },
 
     async send() {
@@ -101,28 +94,58 @@ const FloatUI = {
 
         this.input.value = "";
 
-        FloatAIChats.addMessage("user", text);
-        this.renderChat(FloatAIChats.activeChatId);
-
         const chat = FloatAIChats.getActiveChat();
         if (!chat) return;
 
-        FloatAIChats.addMessage("assistant", "…thinking");
+        FloatAIChats.addMessage("user", text);
+        this.renderChat(chat.id);
+
+        const thinkingMessage = {
+            role: "assistant",
+            content: "…thinking"
+        };
+
+        chat.messages.push(thinkingMessage);
         this.renderChat(chat.id);
 
         try {
-            const reply = await FloatAIEngine.send(chat.messages);
+            const reply =
+                await FloatAIEngine.send(chat.messages);
 
-            chat.messages.pop();
-            FloatAIChats.addMessage("assistant", reply);
+            const index =
+                chat.messages.indexOf(thinkingMessage);
+
+            if (index !== -1) {
+                chat.messages.splice(index, 1);
+            }
+
+            FloatAIChats.addMessage(
+                "assistant",
+                reply
+            );
+
         } catch (err) {
-            chat.messages.pop();
-            FloatAIChats.addMessage("assistant", "Engine error.");
-            console.error("Chat send error:", err);
+
+            const index =
+                chat.messages.indexOf(thinkingMessage);
+
+            if (index !== -1) {
+                chat.messages.splice(index, 1);
+            }
+
+            FloatAIChats.addMessage(
+                "assistant",
+                "Engine error."
+            );
+
+            console.error(err);
         }
 
         this.renderChat(chat.id);
     }
 };
 
-window.addEventListener("load", () => FloatUI.init());
+window.addEventListener(
+    "load",
+    () => FloatUI.init()
+);
