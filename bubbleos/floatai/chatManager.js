@@ -1,91 +1,42 @@
-const FloatAIChats = {
-    chats: [],
-    activeChatId: null,
+import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
-    load() {
-        const saved = localStorage.getItem("floatai_chats");
-        this.chats = saved ? JSON.parse(saved) : [];
-    },
+const FloatAIEngine = {
+    engine: null,
+    model: "Llama-3.2-1B-Instruct-q4f16_1",
 
-    save() {
-        localStorage.setItem(
-            "floatai_chats",
-            JSON.stringify(this.chats)
-        );
-    },
+    async init() {
+        if (this.engine) return;
 
-    createChat() {
-        const chat = {
-            id: Date.now(),
-            title: "New Chat",
-            messages: []
-        };
-
-        this.chats.unshift(chat);
-        this.activeChatId = chat.id;
-        this.save();
-
-        return chat;
-    },
-
-    getActiveChat() {
-        return this.chats.find(
-            c => c.id === this.activeChatId
-        );
-    },
-
-    addMessage(role, content) {
-        const chat = this.getActiveChat();
-        if (!chat) return;
-
-        chat.messages.push({
-            role,
-            content
-        });
-
-        if (
-            chat.title === "New Chat" &&
-            role === "user"
-        ) {
-            chat.title = content.slice(0, 28);
-        }
-
-        this.save();
-    },
-
-    deleteChat(id) {
-        this.chats = this.chats.filter(
-            chat => chat.id !== id
-        );
-
-        if (this.activeChatId === id) {
-            if (this.chats.length > 0) {
-                this.activeChatId =
-                    this.chats[0].id;
-            } else {
-                this.activeChatId = null;
+        this.engine = await webllm.CreateMLCEngine(
+            this.model,
+            {
+                initProgressCallback: (p) => {
+                    console.log("Loading model:", p.text);
+                }
             }
-        }
-
-        this.save();
+        );
     },
 
-    search(query) {
-        const q = query.toLowerCase();
+    async send(messages) {
+        try {
+            await this.init();
 
-        return this.chats.filter(
-            c =>
-                c.title
-                    .toLowerCase()
-                    .includes(q) ||
-                c.messages.some(
-                    m =>
-                        m.content
-                            .toLowerCase()
-                            .includes(q)
-                )
-        );
+            const formatted = messages.map(m => ({
+                role: m.role,
+                content: m.content
+            }));
+
+            const reply = await this.engine.chat.completions.create({
+                messages: formatted,
+                temperature: 0.7,
+                max_tokens: 200
+            });
+
+            return reply.choices?.[0]?.message?.content
+                || "No response generated.";
+        } catch (err) {
+            console.error("WebLLM error:", err);
+            return "Engine error.";
+        }
     }
 };
-
-FloatAIChats.load();
