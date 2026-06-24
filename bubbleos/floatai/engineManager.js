@@ -38,3 +38,5 @@ const FloatAIEngine = {
         }
     }
 };
+
+window.FloatAIEngine = FloatAIEngine;
