@@ -2,7 +2,7 @@ import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
 const FloatAIEngine = {
     engine: null,
-    model: "Qwen2.5-0.5B-Instruct-q4f16_1", // small + fast browser model
+    model: "Qwen2.5-1.5B-Instruct-q4f16_1", // small + fast browser model
 
     async init() {
         if (this.engine) return;
