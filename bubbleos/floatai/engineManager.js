@@ -1,5 +1,11 @@
 import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
+console.table(
+    webllm.prebuiltAppConfig.model_list.map(m => ({
+        id: m.model_id
+    }))
+);
+
 const FloatAIEngine = {
     engine: null,
     model: "Qwen1.5-1.5B-Instruct-q4f16_1-MLC", // small + fast browser model
