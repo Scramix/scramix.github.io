@@ -18,7 +18,6 @@ body {
     color: #003366;
 }
 
-/* Bubble background */
 #bubbles {
     position: fixed;
     inset: 0;
@@ -41,7 +40,6 @@ body {
     to { transform: translateY(-120vh); }
 }
 
-/* Main UI */
 #wrapper {
     position: relative;
     z-index: 1;
@@ -176,19 +174,43 @@ button:hover {
     box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
 }
 
-/* Settings modal */
-#settingsModal {
+#settingsModal,
+#featureModal {
     display: none;
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.3);
     z-index: 10;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-#settingsModal .panel {
+#settingsModal .panel,
+#featureModal .panel {
     width: 300px;
-    margin: 120px auto;
+    margin: 0 auto;
     padding: 15px;
+}
+
+#featureModal .panel {
+    width: min(460px, 100%);
+}
+
+.featureCode {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #7fdfff;
+    background: rgba(255,255,255,0.65);
+    font-family: Consolas, Monaco, monospace;
+    word-break: break-all;
+}
+
+.featureText {
+    margin-top: 10px;
+    line-height: 1.45;
 }
 </style>
 </head>
@@ -244,8 +266,37 @@ button:hover {
     </div>
 </div>
 
+<div id="featureModal">
+    <div class="panel">
+        <h3>Enable WebGPU shader-f16?</h3>
+
+        <div class="featureText">
+            This model needs the WebGPU <strong>shader-f16</strong> feature.
+            Your browser is missing it right now.
+        </div>
+
+        <div class="featureText">
+            To try enabling it in Chrome Canary, launch the browser with:
+        </div>
+
+        <div class="featureCode" id="featureFlagText">
+            --enable-dawn-features=allow_unsafe_apis
+        </div>
+
+        <div class="featureText" id="featureHelpText">
+            Restart the browser after changing the launch flag, then click check again.
+        </div>
+
+        <br>
+
+        <button id="copyFlagBtn">Copy flag</button>
+        <button id="retryFeatureBtn">Check again</button>
+        <button id="featureCloseBtn">Close</button>
+    </div>
+</div>
+
 <div class="statusbar">
-    Float AI running
+    <span id="statusText">Float AI running</span>
 </div>
 
 <script>
@@ -280,10 +331,97 @@ button:hover {
 })();
 </script>
 
+<script>
+window.FloatAIEngine = {
+    async send() {
+        return "Float AI is waiting for WebGPU shader-f16 support. Open the feature prompt above.";
+    }
+};
+</script>
+
 <script src="chatManager.js"></script>
-<script type="module" src="engineManager.js"></script>
-<script type="module" src="chatUI.js"></script>
 <script src="personality.js"></script>
+<script src="chatUI.js"></script>
+
+<script>
+(async () => {
+    const featureModal = document.getElementById("featureModal");
+    const statusText = document.getElementById("statusText");
+    const copyFlagBtn = document.getElementById("copyFlagBtn");
+    const retryFeatureBtn = document.getElementById("retryFeatureBtn");
+    const featureCloseBtn = document.getElementById("featureCloseBtn");
+    const featureHelpText = document.getElementById("featureHelpText");
+
+    async function browserSupportsShaderF16() {
+        if (!navigator.gpu || !navigator.gpu.requestAdapter) {
+            return false;
+        }
+
+        try {
+            const adapter = await navigator.gpu.requestAdapter();
+            if (!adapter || !adapter.features) {
+                return false;
+            }
+            return adapter.features.has("shader-f16");
+        } catch {
+            return false;
+        }
+    }
+
+    async function loadEngineManager() {
+        if (window.__floatEngineLoaded) return;
+
+        statusText.textContent = "Loading WebLLM...";
+        await import("./engineManager.js");
+        window.__floatEngineLoaded = true;
+        statusText.textContent = "Float AI running";
+    }
+
+    async function checkAndLoad() {
+        statusText.textContent = "Checking browser support...";
+
+        const ok = await browserSupportsShaderF16();
+
+        if (ok) {
+            featureModal.style.display = "none";
+            try {
+                await loadEngineManager();
+            } catch (err) {
+                console.error(err);
+                statusText.textContent = "Engine load error.";
+                featureHelpText.textContent = "WebLLM failed to load. Check the console.";
+                featureModal.style.display = "flex";
+            }
+            return;
+        }
+
+        featureModal.style.display = "flex";
+        statusText.textContent = "shader-f16 is required.";
+    }
+
+    copyFlagBtn.addEventListener("click", async () => {
+        const flag = document.getElementById("featureFlagText").textContent.trim();
+        try {
+            await navigator.clipboard.writeText(flag);
+            featureHelpText.textContent = "Flag copied. Restart the browser with it, then click check again.";
+        } catch {
+            featureHelpText.textContent = flag;
+        }
+    });
+
+    retryFeatureBtn.addEventListener("click", async () => {
+        featureHelpText.textContent = "Checking again...";
+        await checkAndLoad();
+    });
+
+    featureCloseBtn.addEventListener("click", () => {
+        featureModal.style.display = "none";
+        statusText.textContent = "Float AI running without WebLLM";
+    });
+
+    document.addEventListener("DOMContentLoaded", checkAndLoad);
+})();
+</script>
 
 </body>
 </html>
