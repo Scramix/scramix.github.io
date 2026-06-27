@@ -8,7 +8,7 @@ console.table(
 
 const FloatAIEngine = {
     engine: null,
-    model: "Llama-2-13b-chat-hf-q4f16_1-MLC", // Decent browser model
+    model: "", // Decent browser model
 
     async init() {
         if (this.engine) return;
