@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Choose the Right Button</title>
+
+  <style>
+    .centerWin {
+      display: none;
+      height: 100vh;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      font-size: 64px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- STAGE 1 -->
+<button id="mainButton" onclick="showButtons()">
+  Click Me (Follow the instructions)
+</button>
+
+<div id="stage1" style="display:none; margin-top:10px;">
+  <h1>Don't click the button that has a ☻</h1>
+
+  <button onclick="nextStage()">Don't Click Me</button>
+
+  <button onclick="bsod()">
+    ☻☻☻☻☻☻☻☻
+  </button>
+</div>
+
+<!-- STAGE 2 -->
+<div id="stage2" style="display:none; margin-top:10px;">
+  <h1>Don't click the button that has a ₆ in it.</h1>
+
+  <button onclick="win()">I'm the real one.</button>
+
+  <button onclick="bsod()">No ₆I'm the real one.</button>
+
+  <button onclick="bsod()">₆NO I'M THE REAL ONE!</button>
+</div>
+
+<!-- WIN SCREEN -->
+<div id="winScreen" class="centerWin">
+  YOU WON
+</div>
+
+<script>
+function showButtons() {
+  document.getElementById("mainButton").remove();
+  document.getElementById("stage1").style.display = "block";
+}
+
+function nextStage() {
+  document.getElementById("stage1").remove();
+  document.getElementById("stage2").style.display = "block";
+}
+
+function bsod() {
+  window.location.href = "bsod.html";
+}
+
+function win() {
+  // clear everything
+  document.body.innerHTML = "";
+
+  // show win screen
+  let winDiv = document.createElement("div");
+  winDiv.innerText = "YOU WON";
+  winDiv.style.height = "100vh";
+  winDiv.style.display = "flex";
+  winDiv.style.justifyContent = "center";
+  winDiv.style.alignItems = "center";
+  winDiv.style.fontSize = "64px";
+  winDiv.style.fontFamily = "Arial";
+
+  document.body.appendChild(winDiv);
+}
+</script>
+
+</body>
+</html>
