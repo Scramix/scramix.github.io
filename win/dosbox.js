@@ -1,8 +1,8 @@
 const w = window;
 
-console.log(dos);
-
 const dos = await w.Dos(document.getElementById("dos")).ready;
+
+console.log(dos);
 
 console.log("Booting Windows 3.1...");
 console.log("Starting download...");
