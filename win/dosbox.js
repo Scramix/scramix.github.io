@@ -1,5 +1,7 @@
 const w = window;
 
+console.log(dos);
+
 const dos = await w.Dos(document.getElementById("dos")).ready;
 
 console.log("Booting Windows 3.1...");
