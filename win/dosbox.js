@@ -2,6 +2,7 @@ const w = window;
 
 console.log("Booting Windows 3.1...");
 console.log("Starting download...");
+document.title = "Windows 3.1";
 
 const response = await fetch("win.zip");
 const fetchauto = await fetch("AUTOEXEC.BAT");
