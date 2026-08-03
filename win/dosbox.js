@@ -1,3 +1,4 @@
 Dos(document.getElementById("dos"), {
-    url: "win.jsdos"
+    url: "./win.jsdos",
+    autoStart: true
 });
