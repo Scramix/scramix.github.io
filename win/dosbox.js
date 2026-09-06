@@ -10,5 +10,5 @@ Dos(document.getElementById("dos"), {
     backendLocked: true,
     countDownStart: 2,
     autoStart: true,
-    fullScreen: true
+    fullscreen: true
 });
