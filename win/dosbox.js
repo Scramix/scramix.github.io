@@ -1,7 +1,7 @@
 const favicon = document.querySelector("link[rel~='icon']");
 
 if (favicon) {
-    favicon.href = "/dosbox.ico";
+    favicon.href = "/favicon.ico";
 }
 
 Dos(document.getElementById("dos"), {
