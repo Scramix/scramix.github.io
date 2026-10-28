@@ -6,5 +6,5 @@ console.log("");
 console.log("The computer feels cold. Like it was made of ice. You have to insert punch cards into the computer to boot it.")
 
 function PUNCH(HOLE) {
-  console.log("PUNCHED HOLE", HOLE, "."
+  console.log("PUNCHED HOLE", HOLE, ".")
 }
