@@ -1,5 +1,6 @@
 // Metadata for the puzzle, such as levels.
 let lvl = 0
+let shoebox [41, 9, 67]
 // Commands that just output text, but are very inconvient to use with functions
 let HINT = "Type LIST into the console for a spreadsheet found in the closet.";
 let HELP = "Commands: HINT, HELP, PUNCH";
