@@ -1,9 +1,8 @@
 // Metadata for the puzzle, such as levels.
 let lvl = 0
 // Commands that just output text, but are very inconvient to use with functions
-let HINT = "Type LIST into the console.";
+let HINT = "Type LIST into the console. Type BACK to go back.";
 let HELP = "Commands: HINT, HELP, PUNCH";
-// Commands that call the rats to help them
 
 // Introduction
 console.log("So... You followed the instructions.");
@@ -28,8 +27,16 @@ function PUNCH(HOLE) {
     }
 }
 
+// The two rat's workstation
+
 function GOTODECODE() {
   location.href = "./DECODE.txt"
 }
 
+function GOTOHOME() {
+  location.href = "./THEPUZZLE.html"
+}
+
+// Commands that call the rats to help them
 globalThis.__defineGetter__("LIST", GOTODECODE);
+globalThis.__defineGetter__("BACK", GOTOHOME);
