@@ -1,9 +1,10 @@
 // Metadata for the puzzle, such as levels.
-let lvl = 0
+let level = 0
 let shoebox = [41, 9, 67]
+let startpnch = 0
 // Commands that just output text, but are very inconvient to use with functions
-let HINT = "Type LIST into the console for a spreadsheet found in the closet.";
-let HELP = "Commands: HINT, HELP, PUNCH";
+let HINT = "Type SHOEBOX and type LIST. LIST will show you an old maintenience paper found in a closet. SHOEBOX will tell you the order you need to punch it in.";
+let HELP = "Commands: HINT, HELP, PUNCH, LEVEL";
 
 // Introduction
 console.log("So... You followed the instructions.");
@@ -15,16 +16,17 @@ console.log("The computer feels cold. Like it was made of ice. You have to inser
 console.warn("If you don't know what you are doing, type HELP for a list of commands.");
 
 // Punch card mechanism, held up by two rats and a cat
-function PUNCH(HOLE) {
-   if (HOLE === shoebox[lvl]) {
-          console.log("PUNCHED HOLE", HOLE, ".");
-        lvl++;
+function PUNCH {  
+if (HOLE !== shoebox[startpnch]) {
+        console.warn("PUNCH CARD NOT ACCEPTED.");
+        return;
+    }
 
-        if (lvl === shoebox.length) {
-            console.log("INSERTING INTO COMPUTER...");
-        }
-    } else {
-        console.warn("MECHANICAL PUNCHER JAMMED.");
+    console.log("PUNCHED HOLE", HOLE, ".");
+    startpnch++;
+
+    if (startpnch === shoebox.length) {
+        console.log("INSERTING INTO COMPUTER...");
     }
 }
 
