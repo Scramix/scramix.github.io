@@ -1,8 +1,10 @@
 // Metadata for the puzzle, such as levels.
 let lvl = 0
 // Commands that just output text, but are very inconvient to use with functions
-let HINT = "Type PICTURE into the console.";
+let HINT = "Type LIST into the console.";
 let HELP = "Commands: HINT, HELP, PUNCH";
+// Commands that call the rats to help them
+let LIST = GOTODECODE()
 
 // Introduction
 console.log("So... You followed the instructions.");
@@ -15,5 +17,18 @@ console.warn("If you don't know what you are doing, type HELP for a list of comm
 
 // Punch card mechanism, held up by two rats and a cat
 function PUNCH(HOLE) {
-  console.log("PUNCHED HOLE", HOLE, ".");
+   if (HOLE === shoebox[lvl]) {
+          console.log("PUNCHED HOLE", HOLE, ".");
+        lvl++;
+
+        if (lvl === shoebox.length) {
+            console.log("INSERTING INTO COMPUTER...");
+        }
+    } else {
+        console.warn("MECHANICAL PUNCHER JAMMED.");
+    }
+}
+
+function GOTODECODE() {
+  location.href = "./DECODE.txt"
 }
