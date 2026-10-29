@@ -16,8 +16,8 @@ console.log("The computer feels cold. Like it was made of ice. You have to inser
 console.warn("If you don't know what you are doing, type HELP for a list of commands.");
 
 // Punch card mechanism, held up by two rats and a cat
-function PUNCH {  
-if (HOLE !== SHOEBOX[startpnch]) {
+function PUNCH(HOLE) {
+    if (HOLE !== SHOEBOX[startpnch]) {
         console.warn("PUNCH CARD NOT ACCEPTED.");
         return;
     }
