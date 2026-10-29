@@ -4,7 +4,6 @@ let lvl = 0
 let HINT = "Type LIST into the console.";
 let HELP = "Commands: HINT, HELP, PUNCH";
 // Commands that call the rats to help them
-let LIST = GOTODECODE()
 
 // Introduction
 console.log("So... You followed the instructions.");
@@ -32,3 +31,5 @@ function PUNCH(HOLE) {
 function GOTODECODE() {
   location.href = "./DECODE.txt"
 }
+
+globalThis.__defineGetter__("LIST", GOTODECODE);
