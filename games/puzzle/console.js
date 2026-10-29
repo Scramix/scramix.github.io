@@ -1,6 +1,6 @@
 // Metadata for the puzzle, such as levels.
-let level = 0
-let shoebox = [41, 9, 67]
+let LEVEL = 0
+let SHOEBOX = [41, 9, 67]
 let startpnch = 0
 // Commands that just output text, but are very inconvient to use with functions
 let HINT = "Type SHOEBOX and type LIST. LIST will show you an old maintenience paper found in a closet. SHOEBOX will tell you the order you need to punch it in.";
@@ -17,7 +17,7 @@ console.warn("If you don't know what you are doing, type HELP for a list of comm
 
 // Punch card mechanism, held up by two rats and a cat
 function PUNCH {  
-if (HOLE !== shoebox[startpnch]) {
+if (HOLE !== SHOEBOX[startpnch]) {
         console.warn("PUNCH CARD NOT ACCEPTED.");
         return;
     }
@@ -25,7 +25,7 @@ if (HOLE !== shoebox[startpnch]) {
     console.log("PUNCHED HOLE", HOLE, ".");
     startpnch++;
 
-    if (startpnch === shoebox.length) {
+    if (startpnch === SHOEBOX.length) {
         console.log("INSERTING INTO COMPUTER...");
     }
 }
