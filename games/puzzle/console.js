@@ -28,10 +28,14 @@ function PUNCH(HOLE) {
 
     if (startpnch === SHOEBOX.length) {
         console.log("INSERTING INTO COMPUTER...");
+        let LEVEL = 1
+        let HINT = "Don't check here. Maybe the HTML has something to offer."
+        let HELP = "Commands: HINT"
+        location.href = "./LEVEL2.html"
     }
 }
 
-// The two rat's workstation
+// The two rats' workstation
 
 function GOTODECODE() {
   location.href = "./DECODE.txt"
