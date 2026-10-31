@@ -1,9 +1,10 @@
 // Metadata for the puzzle, such as levels.
 let LEVEL = 0
 let SHOEBOX = [41, 9, 67]
+let LETTERS = "L, E, T."
 let startpnch = 0
 // Commands that just output text, but are very inconvient to use with functions
-let HINT = "Type SHOEBOX and type LIST. LIST will show you an old maintenience paper found in a closet. SHOEBOX will tell you the order you need to punch it in.";
+let HINT = "Type LETTERS and type LIST. LIST will show you an old maintenience paper found in a closet. LETTERS will tell you the letters you need to decode.";
 let HELP = "Commands: HINT, HELP, PUNCH, LEVEL";
 
 // Introduction
