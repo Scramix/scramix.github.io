@@ -5,7 +5,7 @@ let LETTERS = "L, E, T."
 let startpnch = 0
 // Commands that just output text, but are very inconvient to use with functions
 let HINT = "Type LETTERS and type LIST. LIST will show you an old maintenience paper found in a closet. LETTERS will tell you the letters you need to decode.";
-let HELP = "Commands: HINT, HELP, PUNCH, LEVEL";
+let HELP = "Commands: HINT, HELP, PUNCH, LEVEL", "Punch card syntax example: PUNCH(2)";
 
 // Introduction
 console.log("So... You followed the instructions.");
@@ -33,7 +33,12 @@ function PUNCH(HOLE) {
 
     if (startpnch === SHOEBOX.length) {
         console.log("INSERTING INTO COMPUTER...");
-        location.href = "./LEVEL2.html"
+        WAIT(2)
+        console.info("ACCEPTED PUNCH CARD.");
+        WAIT(1)
+        console.info("LOADING NEXT LEVEL...");
+        WAIT(3)
+        location.href = "./LEVEL1.html"
     }
 }
 
