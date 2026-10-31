@@ -16,6 +16,11 @@ console.log("The computer feels cold. Like it was made of ice. You have to inser
 console.info("If you don't know what you are doing, type HELP for a list of commands.");
 console.error("Don't click on the console.js file. That's cheating. Plus, you can't rely on it forever...")
 
+// The cat helped me figure out a bypass for the inconvient return new Promise crap
+function WAIT(s) { 
+    return new Promise(r => setTimeout(r, s * 1000)); 
+}
+
 // Punch card mechanism, held up by two rats and a cat
 function PUNCH(HOLE) {
     if (HOLE !== SHOEBOX[startpnch]) {
