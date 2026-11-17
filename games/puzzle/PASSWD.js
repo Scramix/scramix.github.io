@@ -9,4 +9,5 @@ function CHKUSER() {
   } else {
     alert("WRONG PASSWORD.");
     PASSWD();
-  }
+    }
+}
