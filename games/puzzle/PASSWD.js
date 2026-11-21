@@ -1,9 +1,9 @@
 PASSWD();
 
 function PASSWD() {
-PASSWD.user = prompt("Enter in your username.");
-PASSWD.pass = prompt("Enter in your password.");
-CHKUSER();
+  PASSWD.user = prompt("Enter in your username.");
+  PASSWD.pass = prompt("Enter in your password.");
+  CHKUSER();
 }
 
 function CHKUSER() {
